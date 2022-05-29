@@ -1,3 +1,4 @@
+// derive: 派生
 #[derive(Debug, PartialEq)]
 pub enum Method {
   Get,
@@ -15,13 +16,14 @@ impl From<&str> for Method {
   }
 }
 
+// 条件编译，在测试的时候才会编译执行
 #[cfg(test)]
 mod tests {
   use super::*;
 
   #[test]
-  fn test_method_into() {
+  fn test_method_info() {
     let m: Method = "GET".into();
-    assert_eq!(m, Method::Get)
+    assert_eq!(m, Method::Get);
   }
 }
