@@ -79,8 +79,54 @@ fn main() {
 - 调用 `lib.rs` 中的 run 函数
 - 处理 run 函数可能出现的错误
 
+## 错误处理
+
+程序是要供人使用的，错误提示只有程序员自己看懂还不行，需要让用户也同样能够看懂。
+
+程序的错误分为两类
+- 一类程序内部的错误，只用于程序员调试所用
+- 一类与用户的操作有关，当用户的操作不在程序的预期之内，需要做出提示
+
+`panic!` 做出错误提示的时候会包含很多无用信息，需要换种方式处理 =》 Result
 
 
+使用 Result 包裹返回结果，在 Result 的结果之上做出错误处理的判断。
+
+```rust
+impl Config {
+    fn new(args: &[String]) -> Result<Config, &str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
+        let query = args[1].clone();
+        let filename = args[2].clone();
+        Ok(Config { query, filename })
+    }
+}
+
+```
+
+值得注意的是，函数的返回值是 Result 的时候，返回结果要么使用 Ok，要么使用 Err 进行包裹。
+
+```rust
+use std::process;
+let config = Config::new(&args).unwrap_or_else(|err| {
+    println!("Problem parsing arguments: {}", err);
+    process::exit(1);
+});
+```
+
+这里的 `unwrap_or_else` 是 Result 上的方法。如果是 Ok，就会返回 Ok 结果；如果结果是 Err，就会执行回调函数。
+
+参数就是一个回调函数
+
+```rust
+|err| {
+    println!("Problem parsing arguments: {}", err);
+        process::exit(1);
+}
+```
+这里是一种管道语法，将 err 注入到花括号中使用
 
 
 
