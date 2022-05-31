@@ -128,6 +128,62 @@ let config = Config::new(&args).unwrap_or_else(|err| {
 ```
 这里是一种管道语法，将 err 注入到花括号中使用
 
+# 错误处理
+
+`Box<dyn Error>` 表示实现了Error trait 的类，但是不会指明具体的类型
+
+```rust
+// Box<dyn Error> 表示一个实现了 Error trait 的类型，但是无需指明具体类型
+// 如此，可以在不同的场景下返回不同的错误
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    // ? 作用：在发生错误时不会出现恐慌，会将错误信息返回给函数的调用者
+    let contents = fs::read_to_string(config.filename)?;
+    println!("With text:\n{}", contents);
+    Ok(())
+}
+```
+
+**错误处理代码**
+
+区别于 `unwrap_or_else` 的处理方法，`unwrap`表示打开包装，用于除了错误外，有返回值提供的方法进行错误处理。
+
+如果一个方法只返回错误，不返回实际内容，就需要使用 `if let Err(e) = ...`
+
+```rust
+if let Err(e) = minigrep::run(config) {
+    println!("Application error: {}", e);
+    process::exit(1);
+}
+```
+
+# 将代码迁移到 lib 中
+
+要想让其他的 crate 使用 lib 中的方法，需要为方法、struct、struct 上的属性 impl，以及 impl 中的方法加上`pub`。
+
+在 main.rs 中使用 lib 中的方法时，需要先进行引用。
+
+```rust
+use minigrep::Config;
+```
+
+`minigrep` 就是当前 crate 的名字，它定义在 toml 文件中
+
+使用 lib.rs 上的方法：
+
+```rust
+if let Err(e) = minigrep::run(config) {
+    println!("Application error: {}", e);
+    process::exit(1);
+}
+```
+
+# 测试驱动开发
+
+- 编写一个会失败的测试，运行该测试，确保它是按照预期的原因失败
+- 编写或修改刚好足够的代码，让新测试通过
+- 重构刚刚添加或修改的代码，却不好测试会始终通过
+- 返回步骤 1 ，继续
+
 
 
 
