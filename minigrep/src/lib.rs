@@ -28,9 +28,15 @@ impl Config {
 }
 
 pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-  vec![]
+  // vec![]
+  let mut results = Vec::new();
+  for line in content.lines() {
+    if (line.contains(query)) {
+      results.push(line)
+    }
+  }
+  results
 }
-
 #[cfg(test)]
 mod tests {
   use super::*;
