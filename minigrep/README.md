@@ -185,6 +185,31 @@ if let Err(e) = minigrep::run(config) {
 - 返回步骤 1 ，继续
 
 
+判断一个 Result 类型是否为错误：
+
+```ruslt
+env::var("CASE_INSENSITIVE").is_err();
+```
+
+如果命令行中设置了 CASE_INSENSITIVE 不管设置成了什么值，那么就会返回true，否则就会返回false。
+
+# 标准输出与标准错误
+
+大多数终端都提供两种输出方式
+
+- 标准输出：stdout
+  println!
+- 标准错误：stderr
+  eprintln!
+
+它可以使一些正常输出重定向到一些文件里面，而错误信息则是在屏幕中进行打印
+
+`cargo run > output.txt` 这条命令没有添加合适的参数，是会报错的。此时错误信息会被打印到output.txt文件中
+
+为了让输出文件更加整洁，将错误信息打印到标准错误中。
+
+
+
 
 
 
