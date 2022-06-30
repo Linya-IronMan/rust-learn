@@ -5,6 +5,16 @@ use std::process;
 fn main() {
     let args: Vec<String> = env::args().collect();
 
+    let x = 123;
+
+    let get_x = |m: u32| -> u32 {
+        println!("get_x {}, {}", m, x);
+        m
+    };
+
+
+    get_x(1);
+
     println!("{:?}", args);
 
     // let query = &args[1];
