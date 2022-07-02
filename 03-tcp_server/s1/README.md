@@ -41,5 +41,26 @@
 
 # 解析 HTTP 请求
 
+就是从HTTP消息文本中按照一定的规则解析出 method，version，resource以及headers等字段
 
+`GET /greeting HTTP/1.1\r\nHost: localhost:3000\r\nUser-Agent: curl/7.71.1\r\nAccept: */*\r\n\r\n`
+
+这就是要解析的HTTP消息。
+
+最后要得到的效果如下，我们可以直接通过into方法直接解析字符串为 HttpRequest 类型
+
+```Rust
+let s = String::from("GET /greeting HTTP/1.1\r\nHost: localhost:3000\r\nUser-Agent: curl/7.71.1\r\nAccept: */*\r\n\r\n");
+// HttpRequest 是必写的
+let req: HttpRequest = s.into();
+
+```
+
+需要注意的是，req的类型 `HttpRequest` 是必写的，s.into 会调用 HttpRequest 的From trait
+
+除了 into trait 方法能够调用 HttpRequest::From 也可以显式调用 From trait
+
+---
+
+终止于 P4 05；40
 

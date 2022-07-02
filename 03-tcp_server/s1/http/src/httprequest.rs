@@ -59,13 +59,13 @@ impl From<String> for HttpRequest {
         let mut parsed_msg_body = "";
 
         for line in req.lines() {
-            if (line.contains("HTTP")) {
-                let (method, resource, version) = process_req_line(req);
+            if line.contains("HTTP") {
+                let (method, resource, version) = process_req_line(line);
                 parsed_method = method;
                 parsed_resource = resource;
                 parsed_version = version;
             } else if line.contains(":") {
-                let (key, value) = process_header_line(req);
+                let (key, value) = process_header_line(line);
                 parsed_headers.insert(key, value);
             } else if line.len() == 0 {
             } else {
@@ -97,7 +97,7 @@ fn process_req_line(s: &str) -> (Method, Resource, Version) {
 }
 
 fn process_header_line(s: &str) -> (String, String) {
-    let mut header_items = s.split(":");
+    let mut header_items = s.split(": ");
     let mut key = String::from("");
     let mut value = String::from("");
     if let Some(k) = header_items.next() {
@@ -129,5 +129,20 @@ mod tests {
     fn test_version_into() {
         let m: Version = "HTTP/1.1".into();
         assert_eq!(m, Version::V1_1);
+    }
+
+    #[test]
+    fn test_read_http() {
+        let s = String::from("GET /greeting HTTP/1.1\r\nHost: localhost:3000\r\nUser-Agent: curl/7.71.1\r\nAccept: */*\r\n\r\n");
+        let mut headers_expected = HashMap::new();
+        headers_expected.insert("Accept".into(), "*/*".into());
+        headers_expected.insert("User-Agent".into(), "curl/7.71.1".into());
+        headers_expected.insert("Host".into(), "localhost:3000".into());
+        let req: HttpRequest = s.into();
+        println!("00000:  {:?}", req);
+        assert_eq!(Method::Get, req.method);
+        assert_eq!(Version::V1_1, req.version);
+        assert_eq!(Resource::Path("/greeting".to_string()), req.resource);
+        assert_eq!(headers_expected, req.headers);
     }
 }
