@@ -50,4 +50,56 @@ impl<'a> HttpResponse<'a> {
         response.body = body;
         response
     }
+    
+    pub fn send_response(&self, write_stream: &mut impl Write) -> Result<()> {
+        let res = self.clone();
+        let response_string: String = String::from(res);
+        let _ = write!(write_stream, "{}", response_string);
+        
+        Ok(())
+    }
+
+    fn version(&self) -> &str {
+        self.version
+    }
+
+    fn status_code(&self) ->&str {
+        self.status_code
+    }
+
+    fn status_text(&self) -> &str {
+        self.status_text
+    }
+
+    fn headers(&self) -> String {
+        let map: HashMap<&str, &str> = self.headers.clone().unwrap();
+        let mut header_string: String = "".into();
+        for (k,v) in map.iter() {
+            header_string = format!("{}{}:{}\r\n", header_string, k, v);
+        }
+        header_string 
+
+    }
+
+    pub fn body(&self) -> &str {
+        match &self.body {
+            Some(b) => b.as_str(),
+            None => "",
+        }
+    }
+}
+
+impl<'a> From<HttpResponse<'a>> for String {
+    fn from(res: HttpResponse) -> String{
+        let res1 = res.clone();
+        format!(
+            "{} {} {}\r\n{}Content-Length: {}\r\n\r\n{}",
+            &res.version(),
+            &res.status_code(),
+            &res.status_text(),
+            &res.headers(),
+            &res.body.unwrap().len(),
+            &res.body
+        )
+    }
 }
