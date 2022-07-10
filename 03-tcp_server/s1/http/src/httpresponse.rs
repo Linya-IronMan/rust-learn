@@ -93,7 +93,7 @@ impl<'a> From<HttpResponse<'a>> for String {
     fn from(res: HttpResponse) -> String{
         let res1 = res.clone();
         format!(
-            "{} {} {}\r\n{}Content-Length: {}\r\n\r\n{}",
+            "{} {} {}\r\n{}Content-Length: {}\r\n\r\n{:?}",
             &res.version(),
             &res.status_code(),
             &res.status_text(),
@@ -101,5 +101,68 @@ impl<'a> From<HttpResponse<'a>> for String {
             &res.body.unwrap().len(),
             &res.body
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_response_struct_creation_200(){
+        let response_actual = HttpResponse::new(
+            "200",
+            None,
+            Some("xxx".into()),
+        );
+        let response_expected  = HttpResponse{
+            version: "HTTP/1.1",
+            status_code: "200",
+            status_text: "OK",
+            headers: {
+                let mut h = HashMap::new();
+                h.insert("Content-Type", "text/html");
+                Some(h)
+            },
+            body: Some("xxx".into()),
+        };
+        assert_eq!(response_actual, response_expected);
+    }
+
+
+    #[test]
+    fn test_response_struct_creation_404(){
+        let response_actual = HttpResponse::new(
+            "404",
+            None,
+            Some("xxx".into()),
+        );
+        let response_expected  = HttpResponse{
+            version: "HTTP/1.1",
+            status_code: "400",
+            status_text: "Not Found",
+            headers: {
+                let mut h = HashMap::new();
+                h.insert("Content-Type", "text/html");
+                Some(h)
+            },
+            body: Some("xxx".into()),
+        };
+        assert_eq!(response_actual, response_expected);
+    }
+
+    #[test]
+    fn test_http_response_creation() {
+        let response_expected = HttpResponse {
+            version: "HTTP/1.1",
+            status_code: "404",
+            status_text: "Not Found",
+            headers: {
+                let mut h = HashMap::new();
+                h.insert("Content-Type", "text/html");
+                Some(h)
+            },
+            body: Some("".into())
+        };
     }
 }
