@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::io::{Result, Write};
 
 #[derive(Debug, PartialEq, Clone)]
+// 结构体中如果使用到了引用类型，那么就需要手动制定生命周期，将引用类型的生命周期标记为于结构体相同
 pub struct HttpResponse<'a> {
     version: &'a str,
     status_code: &'a str,
@@ -94,12 +95,12 @@ impl<'a> From<HttpResponse<'a>> for String {
         let res1 = res.clone();
         format!(
             "{} {} {}\r\n{}Content-Length: {}\r\n\r\n{:?}",
-            &res.version(),
-            &res.status_code(),
-            &res.status_text(),
-            &res.headers(),
+            &res1.version(),
+            &res1.status_code(),
+            &res1.status_text(),
+            &res1.headers(),
             &res.body.unwrap().len(),
-            &res.body
+            &res1.body
         )
     }
 }
@@ -139,7 +140,7 @@ mod tests {
         );
         let response_expected  = HttpResponse{
             version: "HTTP/1.1",
-            status_code: "400",
+            status_code: "404",
             status_text: "Not Found",
             headers: {
                 let mut h = HashMap::new();
@@ -164,5 +165,7 @@ mod tests {
             },
             body: Some("".into())
         };
+         
     }
+
 }
