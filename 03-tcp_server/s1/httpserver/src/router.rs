@@ -1,25 +1,35 @@
-use super::router::Router;
-use http::httprequest::Httprequest;
+use http::{httprequest, httprequest::HttpRequest, httpresponse::HttpResponse};
 use std::io::prelude::*;
-use std::net::TcpListener;
-use std::str;
+use super::handler::{Handler, PageNotFoundHandler, StaticPageHandler, WebServiceHandler};
 
-pub struct Server<' a> {
-    pub fn new(socket_addr: &'a str) -> Self {
-        Server {socket_addr}
+
+pub struct Router ;
+
+
+impl Router {
+    pub fn route(req: HttpRequest, stream: &mut impl Write)  {
+        match req.method {
+            httprequest::Method::Get => match &req.resource {
+                httprequest::Resource::Path(s) => {
+                    let route: Vec<&str> = s.split("/").collect();
+                    match route[1] {
+                        "api" => {
+                            let resp: HttpResponse = WebServiceHandler::handler(&req);
+                            let _ = resp.send_response(stream);
+                        }
+                        _ => {
+                            let resp: HttpResponse = StaticPageHandler::handler(&req);
+                            let _ = resp.send_response(stream);
+                        }
+                    }
+                }
+            }
+            _ => {
+                let resp: HttpResponse = PageNotFoundHandler::handle(&req);
+                let _ = resp.send_response(stream);
+            }
+            
+        }
+        
     }
-    
-    pub fn run(&self) {
-    let connection_listener = TcpListener::bind(self.socket_addr).unwrap();
-    println("Running on {}", self.socket_addr);
-
-    for stream in connection_listener.incoming() {
-        let mut stream = stream.unwrap();
-        println!("Connection established");
-
-        let mut read_buffer = [0; 200];
-        stream.read(&mut read_buffer).unwrap();
-        let req: HttpRequest = String::from_utf8(read_buffer.to)
-    }
-}
 }
