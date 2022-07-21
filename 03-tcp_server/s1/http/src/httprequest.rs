@@ -36,7 +36,6 @@ impl From<&str> for Version {
 
 #[derive(Debug, PartialEq)]
 // TODO: 为什么这里可以写 Path，Path是哪里来的？
-// 好像是 enum 的一种函数写法
 pub enum Resource {
     Path(String),
 }
@@ -64,7 +63,7 @@ impl From<String> for HttpRequest {
                 parsed_method = method;
                 parsed_resource = resource;
                 parsed_version = version;
-            } else if line.contains(":") {
+            } else if line.contains(':') {
                 let (key, value) = process_header_line(line);
                 parsed_headers.insert(key, value);
             } else if line.len() == 0 {
@@ -74,11 +73,11 @@ impl From<String> for HttpRequest {
         }
 
         HttpRequest {
-            method: parsed_method,
-            version: parsed_version,
-            resource: parsed_resource,
-            headers: parsed_headers,
-            msg_body: parsed_msg_body.to_string(),
+            method: parsed_method.into(),
+            version: parsed_version.into(),
+            resource: parsed_resource.into(),
+            headers: parsed_headers.into(),
+            msg_body: parsed_msg_body.to_string().into(),
         }
     }
 }
@@ -119,7 +118,7 @@ mod tests {
         // 我们在Method类型上实现了from这个trait用来做类型的转换
         // 此处调用的时候，会通过类型标注获取转换的目标类型。
         // 然后在目标类型上查找转换的方法 from 这个trait
-        // 也可以写成.. 下面的写法，这种写法就不用显示标记目标类型了，因为可以自动推导而来
+       // 也可以写成.. 下面的写法，这种写法就不用显示标记目标类型了，因为可以自动推导而来
         // let m = Method::from("GET");
         let m: Method = "GET".into();
         assert_eq!(m, Method::Get);
@@ -139,7 +138,6 @@ mod tests {
         headers_expected.insert("User-Agent".into(), "curl/7.71.1".into());
         headers_expected.insert("Host".into(), "localhost:3000".into());
         let req: HttpRequest = s.into();
-        println!("00000:  {:?}", req);
         assert_eq!(Method::Get, req.method);
         assert_eq!(Version::V1_1, req.version);
         assert_eq!(Resource::Path("/greeting".to_string()), req.resource);
