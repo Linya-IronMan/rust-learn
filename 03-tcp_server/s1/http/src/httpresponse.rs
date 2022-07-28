@@ -14,7 +14,6 @@ pub struct HttpResponse<'a> {
 impl<'a> From<HttpResponse<'a>> for String {
     fn from(res: HttpResponse) -> String {
         let res1 = res.clone();
-        let body = res1.body.clone();
         format!(
             "{} {} {}\r\n{}Content-Length: {}\r\n\r\n{}",
             &res1.version(),
