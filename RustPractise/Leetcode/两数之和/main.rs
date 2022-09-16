@@ -20,5 +20,5 @@ fn main() {
     }
 
     let result = Solution::two_sum(nums, target);
-    println!("{}", result);
+    prinbln!("{}", result);
 }
