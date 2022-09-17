@@ -1,7 +1,9 @@
 
-https://rustwiki.org/zh-CN/rust-by-example/hello/print/print_display.html
 
 # print
+
+https://rustwiki.org/zh-CN/rust-by-example/hello/print/print_display.html
+
 ```rust
 
 fn main() {
@@ -65,6 +67,8 @@ fmt::Display：使用 {} 标记。以更优雅和友好的风格来格式化文�
 
 **默认应该都是使用的 fmt::Display trait，想要使用 fmt::Debug 需要通过 derive 将对应的 trait 挂载**
 
+- 什么叫做将文本输出到标准错误?
+
 
 # 结构体的打印
 
@@ -75,7 +79,7 @@ struct Structure(i32);
 println!("{:#?}", Structure(3));
 ```
 
-需要注意的是，结构体的打印是需要添加`#[derive(Debug)]`进行配合的，并且这种标记语法需要加在 struct 定义的位置，而不是println打印的位置。
+- 需要注意的是，结构体的打印是需要添加`#[derive(Debug)]`进行配合的，并且这种标记语法需要加在 struct 定义的位置，而不是println打印的位置。
 
 
 # 调试（Debug）

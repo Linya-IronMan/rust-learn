@@ -1,34 +1,34 @@
 enum List {
-    Node(u32, Box<List>),
-    Nil
+    Cons(i32, Box<List>),
+    Nil,
 }
 
-use List::{Node, Nil};
+use List::*;
 
 impl List {
-    fn new() -> List {
+    fn new () -> List {
         Nil
     }
-    // &self 与 self 在这里有什么区别么？
-    fn prepend(self, elem: u32) -> List {
-        Node(elem, Box::new(self))
+    
+    fn prepend(self, value: i32) -> List {
+        Cons(value, Box::new(self))
     }
 
-    fn len(&self) -> u32 {
+    fn len(&self) -> i32 {
         match *self {
-            Node(_, ref tail)  => 1 + tail.len(),
+            Cons(_, ref tail) => 1 + tail.len(),
             Nil => 0
         }
     }
 
     fn stringify(&self) -> String {
+
         match *self {
-            Node(elem, ref tail ) => {
-                format!("{} {}", elem, tail.stringify())
-            },
+            Cons(value, ref tail) => format!("{}, {}", value, tail.stringify()),
             Nil => format!("Nil")
         }
     }
+    
 }
 
 fn main() {
@@ -44,3 +44,4 @@ fn main() {
     println!("linked list has length: {}", list.len());
     println!("{}", list.stringify());
 }
+

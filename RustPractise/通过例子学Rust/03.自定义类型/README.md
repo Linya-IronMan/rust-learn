@@ -18,7 +18,7 @@
 
 **结构体操作**
 
-- 更新结构体（做部分更新）
+- 更新结构体（做部分更新）`let bottom_right = Point { x: 5.2, ..point };`
 - 元组风格的结构体访问内容
   
 ```rust
@@ -53,6 +53,7 @@ let _unit = Unit;
 
 - 隐藏对未使用代码的警告 `#[allow(dead_code)]`
 - match 中对 enum 的使用是在执行析构操作
+- 枚举是通过关键字以及类型来确定一个"类型"
 
 enum 关键字允许创建一个从数个不同取值中选其一的枚举类型（enumeration）。任何一个在 struct 中合法的取值在 enum 中也合法。
 
@@ -234,6 +235,12 @@ fn main() {
 - match 匹配的时候，最好使用具体的类型T，而不是引用类型 &T
 - match 使用的时候可能会发生所有权的转移，如果不想转移所有权，可以使用 ref 关键字标记
 - 当self用作函数的第一个参数时，它等价于self: Self。&self参数等价于self: &Self。&mut self参数等价于self: &mut Self。
+- 一般写 trait 的时候，self 建议写成 &self, 这样不会发生move
+- impl List<i32> {} 这个i32，并不是每个trait都要写
+
+** 问题 **
+- impl List<i32> {} 类型在什么时候需要写？
+- format! 这个宏是用来干什么的
 
 
 ```rust
