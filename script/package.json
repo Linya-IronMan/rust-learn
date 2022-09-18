@@ -1,0 +1,12 @@
+{
+  "name": "script",
+  "version": "1.0.0",
+  "description": "rust learn note # Web Server  dfs  - Server    监听进来的TCP字节流 - Router   接受HTTP请求，并决定调用哪个Handler - Handler   处理HTTP请求，构建HTTP相应 - HTTP Library   - 解释字节流，把它转化为 HTTP 请求   - 把HTTP相应转化回字节流",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
