@@ -18,4 +18,8 @@ export const custom_readme_list = [
   '../RustPractise/通过例子学Rust/07.表达式/README.md',
   '../RustPractise/通过例子学Rust/08.流程控制/README.md',
   '../RustPractise/通过例子学Rust/09.函数/README.md',
+  '../RustPractise/通过例子学Rust/10.模块/README.md',
+  '../RustPractise/通过例子学Rust/11.crate/README.md',
+  '../RustPractise/通过例子学Rust/12.cargo/README.md',
+  '../RustPractise/通过例子学Rust/13.属性/README.md',
 ];
