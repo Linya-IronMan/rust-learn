@@ -112,3 +112,22 @@ condition met!
 
 不是用 cfg 标记的时候，找不到标记的函数
 
+- 如何做到像 target_os 一样传递参数
+- 需要注意的是，参数左右的引号可能需要使用反斜杠包裹
+
+```rust
+#[cfg(some_condition = "add")]
+fn conditional_function() {
+    println!("condition met!")
+}
+
+fn main() {
+    conditional_function();
+}
+
+```
+
+```shell
+rustc --cfg some_condition=\"add\" custom_condition.rs
+```
+
