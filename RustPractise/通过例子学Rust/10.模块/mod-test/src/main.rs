@@ -1,31 +1,3 @@
-
-# 10. 模块
-
-模块是 “项(item)” 的集合，项可以是：函数，结构体，trait，impl 块，甚至是其他模块
-
-## 10.1 可见性
-
-- 默认情况下，模块中的项具有私有的可见性
-- pub 修饰语可以修改项的默认可见性
-- 模块中只有 public 项可以从模块外的作用域访问。
-- 模块使用 mod 修饰语进行修饰定义
-- 同一模块中，项可以访问其他项，即使它是私有的
-- 模块也可以嵌套
-- `pub(in path)` 只能在指定的模块中访问
-- `pub(self)`
-- `pub(super)`
-- 模块的私有部分不能随意访问，即使它嵌套在公有模块内
-
-- 模块机制消除了相同名字的项之间的歧义
-- 公有项，包括嵌套模块内的，都可以在父模块外部访问
-- `pub(crate)` 项可以在同一个 crate 中的任何地方访问
-- 
-
-**问题**
-- pub(in path) pub(self) pub(super) 各自的可访问性
-- 
-
-```rust
 // 一个名为 `my_mod` 的模块
 mod my_mod {
     // 模块中的项默认具有私有的可见性
@@ -113,74 +85,20 @@ fn main() {
 
     // pub(in path) 项只能在指定的模块中访问
     // 报错！函数 `public_function_in_my_mod` 是私有的
-    //my_mod::nested::public_function_in_my_mod();
+    // my_mod::nested::public_function_in_my_mod();
     // 试一试 ^ 取消该行的注释
 
     // 模块的私有项不能直接访问，即便它是嵌套在公有模块内部的
 
     // 报错！`private_function` 是私有的
-    //my_mod::private_function();
+    // my_mod::private_function();
     // 试一试 ^ 取消此行注释
 
     // 报错！`private_function` 是私有的
-    //my_mod::nested::private_function();
+    // my_mod::nested::private_function();
     // 试一试 ^ 取消此行的注释
 
     // Error! `private_nested` is a private module
     //my_mod::private_nested::function();
     // 试一试 ^ 取消此行的注释
 }
-```
-
-
-## 10.2 结构体的可见性
-
-- 解构体与结构体中的字段也可以被 pub 语句修饰
-
-https://rustwiki.org/zh-CN/rust-by-example/mod/struct_visibility.html
-
-## 10.3 use 声明
-
-- 将一个完整的路径绑定你个到一个新的名字，更加容易访问
-
-https://rustwiki.org/zh-CN/rust-by-example/mod/use.html#use-%E5%A3%B0%E6%98%8E
-
-
-```rust
-use deeply::nested::function as other_function;
-```
-
-## 10.4 super 和 self
-
-https://rustwiki.org/zh-CN/rust-by-example/mod/super.html
-
-## 10.5 文件分层
-
-就是以合适的文件目录结构组织各个模块 
-
-- mode my 用于声明一个模块。此声明会查找名为 my.rs 或者 my/mod.rs 的文件，并将该文件放到
-  名为 my 的模块中 
-
-
-```rust
-// 此声明将会查找名为 `my.rs` 或 `my/mod.rs` 的文件，并将该文件的内容放到
-// 此作用域中一个名为 `my` 的模块里面。
-mod my;
-
-fn function() {
-    println!("called `function()`");
-}
-
-fn main() {
-    my::function();
-
-    function();
-
-    my::indirect_access();
-
-    my::nested::function();
-}
-
-```
-
-
