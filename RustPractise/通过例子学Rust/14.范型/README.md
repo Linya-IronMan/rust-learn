@@ -206,6 +206,9 @@ fn difference<A, B, C>(container: &C) -> i32 where
 fn difference<C: Contains>(container: &C) -> i32 { ... }
 ```
 
+- 使用关联类型将一些范型内置在 trait 之后，对于其他类型进行约束时，就可以省略原本写在外面的范型
+- trait 中的方法调用范型类型的时候 `&Self::A` 如此调用
+
 ```rust
 struct Container(i32, i32);
 
@@ -259,4 +262,19 @@ fn main() {
     println!("The difference is: {}", difference(&container));
 }
 ```
+
+## 14.9 虚类型参数
+
+虚类型：phantom type 
+这是一种在运行时不出现，而在编译时进行静态检查的类型参数。
+
+**问题** 这有什么用？
+
+https://rustwiki.org/zh-CN/rust-by-example/generics/phantom.html
+
+不懂！
+
+### 14.9.1 测试实例：单位说明
+
+https://rustwiki.org/zh-CN/rust-by-example/generics/phantom/testcase_units.html
 
