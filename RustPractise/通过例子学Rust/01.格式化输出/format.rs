@@ -15,13 +15,17 @@ impl Display for City{
 
     }
 }
+
+#[derive(Debug)]
+struct Inch(i32);
 fn main() {
-    for city in [
-        City { name: "Dublin", lat: 53.347778, lon: -6.259722 },
-        City { name: "Oslo", lat: 59.95, lon: 10.75 },
-        City { name: "Vancouver", lat: 49.25, lon: -123.1 },
-    ].iter() {
-        println!("{}", *city);
-    }
+    // for city in [
+    //     City { name: "Dublin", lat: 53.347778, lon: -6.259722 },
+    //     City { name: "Oslo", lat: 59.95, lon: 10.75 },
+    //     City { name: "Vancouver", lat: 49.25, lon: -123.1 },
+    // ].iter() {
+    //     println!("{}", *city);
+    // }
+    println!("结构体打印：{:?}", Inch(32));
 }
 
