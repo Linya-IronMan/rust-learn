@@ -5,11 +5,11 @@ use std::str;
 fn main() {
     let mut stream = TcpStream::connect("localhost:3000").unwrap();
     // 需要发送原始的字节
-    stream.write("Hello".as_bytes()).unwrap();
+    stream.write_all("Hello".as_bytes()).unwrap();
 
     // s
     let mut buffer = [0; 5];
-    stream.read(&mut buffer).unwrap();
+    stream.read_exact(&mut buffer).unwrap();
 
     println!(
         "Response from server:{:?}",
