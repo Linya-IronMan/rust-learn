@@ -1,4 +1,3 @@
-use std::mem::swap;
 use std::ops::Index;
 
 macro_rules! recurrence {
@@ -45,10 +44,14 @@ fn main() {
                         a[n - 1] + a[n - 2]
                     };
 
-                    let mut swap_tmp = next_item;
-                    for i in (0..self.mem.len()).rev() {
-                        swap(&mut swap_tmp, &mut self.mem[i])
+                    {
+                        use std::mem::swap;
+                        let mut swap_tmp = next_item;
+                        for i in (0..self.mem.len()).rev() {
+                            swap(&mut swap_tmp, &mut self.mem[i])
+                        }
                     }
+                    self.pos += 1;
                     Some(next_item)
                 }
             }
@@ -60,8 +63,8 @@ fn main() {
         }
     };
 
-    for item in lib.take(10) {
-        println!("{}", item);
+    for (index, val) in lib.take(20).enumerate() {
+        println!("F[{}] = {}", index, val);
     }
     // recurrence! {
     //     1, 2;
