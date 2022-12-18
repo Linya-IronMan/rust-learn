@@ -1,3 +1,6 @@
+use std::mem::swap;
+use std::ops::Index;
+
 macro_rules! recurrence {
     ($($inits: expr), * ; ... ; $seq: ident[$idx: ident] = $recur: expr) => {};
 }
@@ -35,8 +38,17 @@ fn main() {
                 } else {
                     let next_item = {
                         let n = self.pos;
+                        let a = IndexOffset {
+                            slice: &self.mem,
+                            offset: n - 2,
+                        };
                         a[n - 1] + a[n - 2]
                     };
+
+                    let mut swap_tmp = next_item;
+                    for i in (0..self.mem.len()).rev() {
+                        swap(&mut swap_tmp, &mut self.mem[i])
+                    }
                     Some(next_item)
                 }
             }
