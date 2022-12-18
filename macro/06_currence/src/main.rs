@@ -1,22 +1,31 @@
-use std::ops::Index;
-
-macro_rules! recurrence {
-    ($($inits: expr), * ; ... ; $seq: ident[$idx: ident] = $recur: expr) => {};
+macro_rules! count {
+    () => {0_usize};
+    ($_: expr) => {1_usize};
+    ($_: expr, $($tail: expr), *) => {
+        1 + count!($($tail), *)
+    }
 }
-fn main() {
-    let lib = {
+
+#[allow(unused_macros)]
+macro_rules! recurrence {
+    (items:$ty:ty => $($inits: expr), * ; ... ; $seq: ident[$idx: ident] = $recur: expr) => {{
+        use std::ops::Index;
+        const LEN: usize = count!($($inits), *);
+
+        println!("Len: {}", LEN);
+
         struct Recurrence {
-            mem: [u64; 2],
+            mem: [$ty; LEN],
             pos: usize,
         }
 
         struct IndexOffset<'a> {
-            slice: &'a [u64; 2],
+            slice: &'a [$ty; LEN],
             offset: usize,
         }
 
         impl<'a> Index<usize> for IndexOffset<'a> {
-            type Output = u64;
+            type Output = $ty;
             fn index(&self, index: usize) -> &Self::Output {
                 // real_index 计算的是在 mem 中的 index
                 let real_index = index - self.offset;
@@ -27,21 +36,23 @@ fn main() {
         }
 
         impl Iterator for Recurrence {
-            type Item = u64;
+            type Item = $ty;
 
             fn next(&mut self) -> Option<Self::Item> {
-                if self.pos < 2 {
+                if self.pos < LEN {
                     let next_item = self.mem[self.pos];
                     self.pos += 1;
                     Some(next_item)
                 } else {
                     let next_item = {
-                        let n = self.pos;
-                        let a = IndexOffset {
+                        // 将标识符换成 macro 中传过来的
+                        let $idx = self.pos;
+                        let $seq = IndexOffset {
                             slice: &self.mem,
-                            offset: n - 2,
+                            offset: $idx - LEN,
                         };
-                        a[n - 1] + a[n - 2]
+                        // a[n - 1] + a[n - 2]
+                        $recur
                     };
 
                     {
@@ -58,10 +69,14 @@ fn main() {
         }
 
         Recurrence {
-            mem: [0, 1],
+            mem: [$($inits), *],
             pos: 0,
         }
-    };
+    }};
+}
+
+fn main() {
+    let lib = recurrence!(items:u64 => 0, 1, 3, 4; ... ; a[n] = a[n-3] + a[n-4]);
 
     for (index, val) in lib.take(20).enumerate() {
         println!("F[{}] = {}", index, val);
