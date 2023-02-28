@@ -2,7 +2,7 @@ pub mod b {
     pub struct test {}
 }
 
-#[macro_use]
+// #[macro_use]
 pub mod a {
     #[allow(unused_macros)]
     #[macro_export]
