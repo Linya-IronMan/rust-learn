@@ -6,6 +6,7 @@ use std::str::FromStr;
 use std::sync::mpsc::{channel, Sender};
 use std::thread;
 
+#[warn(dead_code)]
 struct Arguments {
     flag: String,
     ipaddr: IpAddr,
@@ -24,11 +25,11 @@ impl Arguments {
 
         let f = args[1].clone();
         if let Ok(ipaddr) = IpAddr::from_str(&f) {
-            return Ok(Arguments {
+            Ok(Arguments {
                 flag: String::from(""),
                 ipaddr,
                 threads: 4,
-            });
+            })
         } else {
             let flag = args[1].clone();
             if flag.contains("-h") || flag.contains("-help") && args.len() == 2 {
@@ -36,8 +37,8 @@ impl Arguments {
                     "Usage: -j to select how many threads you want
                 \r\n      -h or -help to show this help message"
                 );
-                return Err("help");
-            } else if flag.contains("j") {
+                Err("help")
+            } else if flag.contains('j') {
                 let ipaddr = match IpAddr::from_str(&args[3]) {
                     Ok(s) => s,
                     Err(_) => return Err("not a valid IPADDR; must be IPv4 or IPv6"),
@@ -45,16 +46,16 @@ impl Arguments {
 
                 let threads = match args[2].parse::<u16>() {
                     Ok(s) => s,
-                    Err(s) => return Err("failed to parse thread number"),
+                    Err(_s) => return Err("failed to parse thread number"),
                 };
 
-                return Ok(Arguments {
+                Ok(Arguments {
                     flag,
                     ipaddr,
                     threads,
-                });
+                })
             } else {
-                return Err("invalid syntax");
+                Err("invalid syntax")
             }
         }
     }
@@ -98,6 +99,7 @@ fn main() {
     for i in 0..num_threads {
         let tx = tx.clone();
 
+        // 一个端口一个线程进行扫描
         thread::spawn(move || {
             scan(tx, i, arguments.ipaddr, num_threads);
         });
@@ -109,7 +111,7 @@ fn main() {
         out.push(p);
     }
 
-    println!("");
+    println!("End!!");
     out.sort();
 
     for v in out {

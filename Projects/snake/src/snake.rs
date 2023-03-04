@@ -6,6 +6,8 @@ use crate::draw::draw_block;
 
 // red
 const SNAKE_COLOR: Color = [0.00, 0.80, 0.00, 1.0];
+// white
+const COLOR_BLUE: Color = [52.0, 39.0, 245.0, 0.8];
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum Direction {
@@ -55,8 +57,12 @@ impl Snake {
     }
 
     pub fn draw(&self, con: &Context, g: &mut G2d) {
-        for block in &self.body {
-            draw_block(SNAKE_COLOR, block.x, block.y, con, g);
+        for (num, block) in self.body.iter().enumerate() {
+            if num == 0 {
+                draw_block(COLOR_BLUE, block.x, block.y, con, g);
+            } else {
+                draw_block(SNAKE_COLOR, block.x, block.y, con, g);
+            }
         }
     }
 
@@ -101,6 +107,8 @@ impl Snake {
         self.direction
     }
 
+    /// 如果有指定接下来的方向,就按照指定方向添加头部
+    /// 如果没有指定方向,就按原方向添加头部
     pub fn next_head(&self, dir: Option<Direction>) -> (i32, i32) {
         let (head_x, head_y): (i32, i32) = self.head_position();
 

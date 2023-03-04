@@ -28,14 +28,15 @@ fn main() {
             game.key_pressed(key);
         }
 
+        // 初始化地图
         window.draw_2d(&event, |c, g, _d| {
             clear(BACK_COLOR, g);
             game.draw(&c, g);
         });
 
         event.update(|arg| {
+            // 更新页面 让snake具有自动移动的能力
             game.update(arg.dt);
         });
     }
-    
 }
