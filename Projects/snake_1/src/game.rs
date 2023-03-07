@@ -8,9 +8,9 @@ struct Game {
 }
 
 impl Game {
-    pub fn new(&self) -> Self {
-        Game { game_over: false, snake: Snake{
-
-        } }
-    }
+    // pub fn new(&self) -> Self {
+    //     Game { game_over: false, snake: Snake{
+    //
+    //     } }
+    // }
 }

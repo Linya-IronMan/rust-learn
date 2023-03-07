@@ -27,6 +27,7 @@ fn main() {
 
 
 
+    let mut snake = Snake::new(3, 1);
     while let Some(event) = window.next() {
         if let Some(Button::Keyboard(key)) = event.press_args() {
             // game.key_pressed(key);
@@ -35,6 +36,9 @@ fn main() {
         window.draw_2d(&event, |c, g, _d| {
             clear(BACK_COLOR, g);
             // draw_block(BACK_COLOR, 0, 0, &c, g)
+
+            snake.init_draw(&c, g);
+
             // game.draw(&c, g);
         });
     }

@@ -10,7 +10,8 @@ impl fmt::Display for Circle {
 }
 
 fn main() {
-    let circle  = Circle { radius: 6 };
-    println!("{}", circle);
+    let circle = Circle { radius: 6 };
+    let a = circle.to_string();
+    println!("a: {}", a);
+    println!("circle: {}", circle);
 }
-

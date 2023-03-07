@@ -30,6 +30,7 @@ fn main() {
 
         // 初始化地图
         window.draw_2d(&event, |c, g, _d| {
+            // 使用背景色清除画板
             clear(BACK_COLOR, g);
             game.draw(&c, g);
         });
