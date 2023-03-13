@@ -40,7 +40,7 @@ impl Game {
             game_over: false,
         }
     }
-
+    /// hello world
     pub fn key_pressed(&mut self, key: Key) {
         if self.game_over {
             return;
