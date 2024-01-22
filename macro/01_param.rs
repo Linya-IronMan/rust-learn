@@ -9,6 +9,6 @@ macro_rules! example {
 
 fn main() {
     example![A B];
-
+    example! { A  B  };
     example!(A: B);
 }
